@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click to Start</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    #jumpscare {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #jumpscare img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: flash 0.1s alternate infinite;
+    }
+
+    @keyframes flash {
+      from { filter: brightness(1); }
+      to { filter: brightness(2); }
+    }
+  </style>
+</head>
+<body onclick="startJumpscare()">
+  <h1>Click anywhere to start</h1>
+
+  <div id="jumpscare">
+    <img src="scary.jpg" alt="BOO!">
+    <audio id="scream" src="scream.mp3"></audio>
+  </div>
+
+  <script>
+    function enterFullscreen() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(() => {});
+      }
+    }
+
+    function startJumpscare() {
+      enterFullscreen();
+      document.body.onclick = null;
+
+      setTimeout(() => {
+        document.getElementById("jumpscare").style.display = "flex";
+        const scream = document.getElementById("scream");
+        scream.volume = 1.0;
+        scream.play();
+      }, 3000);
+    }
+
+    // Re-enter fullscreen if user exits
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
+        // Try to re-enter fullscreen
+        enterFullscreen();
+      }
+    });
+  </script>
+</body>
+</html>
